@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TopBar } from './components/TopBar';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
@@ -29,39 +29,109 @@ import { QuoteSuccessModal } from './components/QuoteSuccessModal';
 import { QuoteRequest, PriceItem } from './types';
 import { PRICE_ITEMS } from './data/materialsData';
 
+type ViewType =
+  | 'home'
+  | 'about'
+  | 'materials'
+  | 'quarry-stones'
+  | 'services'
+  | 'prices'
+  | 'contact'
+  | 'terms'
+  | 'privacy';
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'about' | 'materials' | 'quarry-stones' | 'services' | 'prices' | 'contact' | 'terms' | 'privacy'>('home');
+  const [currentView, setCurrentView] = useState<ViewType>('home');
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [priceListOpen, setPriceListOpen] = useState(false);
-  const [detailModalCategory, setDetailModalCategory] = useState<'boulders' | 'quarry-stones' | 'quarry-dust' | 'filling' | 'riversand' | 'stones' | null>(null);
+  const [detailModalCategory, setDetailModalCategory] = useState<
+    'boulders' | 'quarry-stones' | 'quarry-dust' | 'filling' | 'riversand' | 'stones' | null
+  >(null);
   const [activeQuote, setActiveQuote] = useState<QuoteRequest | null>(null);
 
-  // Synchronize hash with view
+  /**
+   * Unified navigation helper: updates current view, sets browser hash for bookmarking/history,
+   * and handles smooth scrolling to top or target element.
+   */
+  const navigate = useCallback(
+    (view: ViewType, opts?: { scrollToElement?: string; noScroll?: boolean }) => {
+      setCurrentView(view);
+      const targetHash = opts?.scrollToElement
+        ? `#${opts.scrollToElement}`
+        : view === 'home'
+        ? '#home'
+        : `#${view}`;
+
+      if (window.location.hash !== targetHash) {
+        window.history.pushState(null, '', targetHash);
+      }
+
+      if (opts?.scrollToElement) {
+        setTimeout(() => {
+          const el = document.getElementById(opts.scrollToElement!);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 60);
+      } else if (!opts?.noScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    },
+    []
+  );
+
+  // Synchronize hash aliases with view on initial load and back/forward browser navigation
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
-      if (hash === '#about-page' || hash === '#about') {
+      if (hash === '#about-page' || hash === '#about' || hash === '#about-us') {
         setCurrentView('about');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#terms' || hash === '#terms-and-conditions' || hash === '#terms-page' || hash === '#legal') {
+      } else if (
+        hash === '#terms' ||
+        hash === '#terms-and-conditions' ||
+        hash === '#terms-page' ||
+        hash === '#legal'
+      ) {
         setCurrentView('terms');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#privacy' || hash === '#privacy-policy' || hash === '#privacy-page') {
+      } else if (
+        hash === '#privacy' ||
+        hash === '#privacy-policy' ||
+        hash === '#privacy-page'
+      ) {
         setCurrentView('privacy');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#quarry-stones' || hash === '#quarry' || hash === '#quarry-stone' || hash === '#stones') {
+      } else if (
+        hash === '#quarry-stones' ||
+        hash === '#quarry' ||
+        hash === '#quarry-stone' ||
+        hash === '#stones'
+      ) {
         setCurrentView('quarry-stones');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#materials-page' || hash === '#materials' || hash === '#catalog') {
+      } else if (
+        hash === '#materials-page' ||
+        hash === '#materials' ||
+        hash === '#catalog'
+      ) {
         setCurrentView('materials');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (hash === '#services-page' || hash === '#services') {
         setCurrentView('services');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#prices-page' || hash === '#prices' || hash === '#pricing-page' || hash === '#pricing') {
+      } else if (
+        hash === '#prices-page' ||
+        hash === '#prices' ||
+        hash === '#pricing-page' ||
+        hash === '#pricing'
+      ) {
         setCurrentView('prices');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (hash === '#contact-page' || hash === '#contact' || hash === '#contact-us' || hash === '#enquiry-form') {
+      } else if (
+        hash === '#contact-page' ||
+        hash === '#contact' ||
+        hash === '#contact-us' ||
+        hash === '#enquiry-form'
+      ) {
         setCurrentView('contact');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (hash === '#gallery') {
@@ -69,21 +139,26 @@ export default function App() {
         setTimeout(() => {
           const el = document.getElementById('gallery');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        }, 60);
       } else if (hash === '#quote-form') {
         setCurrentView('home');
         setTimeout(() => {
           const el = document.getElementById('quote-form');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        }, 60);
       } else if (hash === '#home' || hash === '' || hash === '#') {
         setCurrentView('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
   }, []);
 
   const handleQuoteSubmit = (quote: QuoteRequest) => {
@@ -92,8 +167,7 @@ export default function App() {
 
   const handleSelectMaterial = (materialId: string) => {
     if (materialId === 'quarry-stones') {
-      setCurrentView('quarry-stones');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navigate('quarry-stones');
       return;
     }
     const item = PRICE_ITEMS.find((p) => p.id === materialId);
@@ -104,37 +178,27 @@ export default function App() {
 
   const handleSelectCategoryFromFooter = (category: string) => {
     if (category === 'quarry-stones') {
-      setCurrentView('quarry-stones');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navigate('quarry-stones');
       return;
     }
-    const validCategory = (['boulders', 'quarry-stones', 'quarry-dust', 'filling', 'riversand', 'stones'] as const).find((c) => c === category);
+    const validCategory = (
+      ['boulders', 'quarry-stones', 'quarry-dust', 'filling', 'riversand', 'stones'] as const
+    ).find((c) => c === category);
     if (validCategory) {
       setDetailModalCategory(validCategory);
     }
   };
 
   const handleSelectPriceItemForQuote = (item: PriceItem) => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
-      setTimeout(() => {
-        const formElement = document.getElementById('quote-form');
-        if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const formElement = document.getElementById('quote-form');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+    navigate('home', { scrollToElement: 'quote-form' });
   };
 
   const handleOrderWithCalc = (materialSummary: string, trips: number) => {
     setActiveQuote({
       fullName: 'Prospective Contractor / Builder',
-      email: 'client@site.com',
+      email: '',
       phone: '0244520024',
-      materialId: 'quarry-3-4',
+      materialId: 'quarry-stones',
       quantity: trips,
       unit: 'trip',
       location: 'Mallam Junction & Greater Accra Delivery Zone',
@@ -142,17 +206,15 @@ export default function App() {
     });
   };
 
-  const navigateToHomeSection = (sectionId: string) => {
-    if (currentView !== 'home') {
-      setCurrentView('home');
-      setTimeout(() => {
-        const elem = document.getElementById(sectionId);
-        if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const elem = document.getElementById(sectionId);
-      if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-    }
+  // Consistent navigation callback bundle passed to all pages, header and footer
+  const navProps = {
+    onNavigateHome: () => navigate('home'),
+    onNavigateAbout: () => navigate('about'),
+    onNavigateMaterials: () => navigate('materials'),
+    onNavigateServices: () => navigate('services'),
+    onNavigatePrices: () => navigate('prices'),
+    onNavigateGallery: () => navigate('home', { scrollToElement: 'gallery' }),
+    onNavigateContact: () => navigate('contact'),
   };
 
   return (
@@ -163,31 +225,7 @@ export default function App() {
       {/* 2. Header Navigation */}
       <Header
         currentView={currentView}
-        onNavigateHome={() => {
-          setCurrentView('home');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateAbout={() => {
-          setCurrentView('about');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateServices={() => {
-          setCurrentView('services');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigatePrices={() => {
-          setCurrentView('prices');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateMaterials={() => {
-          setCurrentView('materials');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigateGallery={() => navigateToHomeSection('gallery')}
-        onNavigateContact={() => {
-          setCurrentView('contact');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        {...navProps}
         onOpenCalculator={() => setCalculatorOpen(true)}
         onOpenPriceList={() => setPriceListOpen(true)}
         onSelectMaterial={handleSelectMaterial}
@@ -195,91 +233,15 @@ export default function App() {
 
       <main className="flex-grow">
         {currentView === 'terms' ? (
-          /* Dedicated Terms & Conditions Page Screen matching uploaded design */
-          <TermsPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
+          /* Dedicated Terms & Conditions Page Screen */
+          <TermsPageScreen {...navProps} />
         ) : currentView === 'privacy' ? (
           /* Dedicated Privacy Policy Page Screen */
-          <PrivacyPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
+          <PrivacyPageScreen {...navProps} />
         ) : currentView === 'quarry-stones' ? (
-          /* Dedicated Quarry Stones Material Detail Page Screen matching uploaded screen */
+          /* Dedicated Quarry Stones Material Detail Page Screen */
           <QuarryStonesPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            {...navProps}
             onSelectOtherMaterial={(cat) => {
               setDetailModalCategory(cat);
             }}
@@ -287,54 +249,11 @@ export default function App() {
           />
         ) : currentView === 'contact' ? (
           /* Dedicated Contact Us Page Screen */
-          <ContactPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onQuoteSubmit={handleQuoteSubmit}
-          />
+          <ContactPageScreen {...navProps} onQuoteSubmit={handleQuoteSubmit} />
         ) : currentView === 'materials' ? (
           /* Dedicated Building Materials Catalog Page Screen */
           <MaterialsPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            {...navProps}
             onOpenPriceList={() => setPriceListOpen(true)}
             onOpenDetailModal={(cat) => setDetailModalCategory(cat)}
             onSelectMaterial={handleSelectPriceItemForQuote}
@@ -342,75 +261,22 @@ export default function App() {
         ) : currentView === 'about' ? (
           /* Dedicated About Us Page Screen */
           <AboutPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            {...navProps}
             onOpenCalculator={() => setCalculatorOpen(true)}
             onSelectMaterial={handleSelectPriceItemForQuote}
           />
         ) : currentView === 'services' ? (
-          /* Dedicated Services Page Screen matching uploaded screen verbatim */
+          /* Dedicated Services Page Screen */
           <ServicesPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigatePrices={() => {
-              setCurrentView('prices');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            {...navProps}
             onSelectCategory={(cat) => {
               setDetailModalCategory(cat);
             }}
-            onSelectMaterial={handleSelectPriceItemForQuote}
           />
         ) : currentView === 'prices' ? (
           /* Dedicated Building Material Supply Prices Page Screen */
           <PricesPageScreen
-            onNavigateHome={() => {
-              setCurrentView('home');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateAbout={() => {
-              setCurrentView('about');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateServices={() => {
-              setCurrentView('services');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateMaterials={() => {
-              setCurrentView('materials');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigateGallery={() => navigateToHomeSection('gallery')}
-            onNavigateContact={() => {
-              setCurrentView('contact');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            {...navProps}
             onSelectMaterial={handleSelectPriceItemForQuote}
             onQuoteSubmit={handleQuoteSubmit}
           />
@@ -418,7 +284,10 @@ export default function App() {
           /* Home Landing View */
           <>
             {/* 3. Hero Section with Request a Quote */}
-            <HeroSection onQuoteSubmit={handleQuoteSubmit} />
+            <HeroSection
+              onQuoteSubmit={handleQuoteSubmit}
+              onNavigateContact={() => navigate('contact')}
+            />
 
             {/* 4. About Us Preview Section */}
             <AboutSection />
@@ -427,6 +296,7 @@ export default function App() {
             <MaterialsSection
               onSelectCategory={(cat) => setDetailModalCategory(cat)}
               onOpenDetailModal={(cat) => setDetailModalCategory(cat)}
+              onNavigatePrices={() => navigate('prices')}
             />
 
             {/* 6. Pricing Preview Section */}
@@ -434,17 +304,15 @@ export default function App() {
               onOpenPriceListModal={() => setPriceListOpen(true)}
               onOpenCalculatorModal={() => setCalculatorOpen(true)}
               onSelectMaterialForQuote={handleSelectPriceItemForQuote}
+              onNavigatePrices={() => navigate('prices')}
             />
 
             {/* 7. Gallery & Services Section */}
-            <GallerySection />
+            <GallerySection onNavigateServices={() => navigate('services')} />
 
             {/* 8. Contact & CTA Block */}
             <ContactSection
-              onOpenQuoteModal={() => {
-                const formElement = document.getElementById('quote-form');
-                if (formElement) formElement.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onOpenQuoteModal={() => navigate('home', { scrollToElement: 'quote-form' })}
             />
           </>
         )}
@@ -452,15 +320,10 @@ export default function App() {
 
       {/* 9. Footer */}
       <Footer
+        {...navProps}
         onSelectCategory={handleSelectCategoryFromFooter}
-        onNavigateTerms={() => {
-          setCurrentView('terms');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onNavigatePrivacy={() => {
-          setCurrentView('privacy');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onNavigateTerms={() => navigate('terms')}
+        onNavigatePrivacy={() => navigate('privacy')}
       />
 
       {/* 10. Sticky Floating WhatsApp Button */}

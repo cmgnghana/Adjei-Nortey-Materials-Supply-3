@@ -16,8 +16,9 @@ import { PriceItem, SupplyUnit, QuoteRequest } from '../types';
 interface PricesPageScreenProps {
   onNavigateHome: () => void;
   onNavigateAbout: () => void;
-  onNavigateServices: () => void;
   onNavigateMaterials: () => void;
+  onNavigateServices: () => void;
+  onNavigatePrices?: () => void;
   onNavigateGallery: () => void;
   onNavigateContact: () => void;
   onSelectMaterial: (item: PriceItem) => void;
@@ -27,8 +28,9 @@ interface PricesPageScreenProps {
 export const PricesPageScreen: React.FC<PricesPageScreenProps> = ({
   onNavigateHome,
   onNavigateAbout,
-  onNavigateServices,
   onNavigateMaterials,
+  onNavigateServices,
+  onNavigatePrices,
   onNavigateGallery,
   onNavigateContact,
   onSelectMaterial,

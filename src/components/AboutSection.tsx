@@ -16,7 +16,7 @@ export const AboutSection: React.FC = () => {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   return (
-    <section className="py-20 lg:py-28 bg-white relative" id="about">
+    <section className="py-20 lg:py-28 bg-white relative" id="home-about">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Column: Copy & Checklist */}

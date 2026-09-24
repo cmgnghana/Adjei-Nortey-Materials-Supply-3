@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calculator, X, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
-import { COMPANY_DETAILS, PRICE_ITEMS } from '../data/materialsData';
+import { COMPANY_DETAILS, PRICE_ITEMS, parsePrice } from '../data/materialsData';
 
 interface MaterialCalculatorModalProps {
   isOpen: boolean;
@@ -53,10 +53,10 @@ export const MaterialCalculatorModal: React.FC<MaterialCalculatorModalProps> = (
     summaryText = `For wall plastering/rendering on ${area.toFixed(0)}m² surface area.`;
   }
 
-  const estStoneCost = stoneTrips * 5500;
-  const estSandCost = sandTrips * 5000;
-  const estFillingCost = fillingTrips * 4500;
-  const totalEstimatedCost = estStoneCost + estSandCost + estFillingCost;
+  const quarryStonesItem = PRICE_ITEMS.find((p) => p.category === 'quarry-stones' || p.id === 'quarry-stones');
+  const stoneUnitPrice = quarryStonesItem ? parsePrice(quarryStonesItem.priceDisplay) ?? 5500 : 5500;
+  const estStoneCost = stoneTrips * stoneUnitPrice;
+  const totalEstimatedCost = estStoneCost;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
@@ -179,7 +179,9 @@ export const MaterialCalculatorModal: React.FC<MaterialCalculatorModalProps> = (
                 <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold text-gray-900 block">Quarry Stones / Chippings</span>
-                    <span className="text-[11px] text-gray-500 font-mono">GH₵ 5,500 / trip</span>
+                    <span className="text-[11px] text-gray-500 font-mono">
+                      {quarryStonesItem ? `${quarryStonesItem.priceDisplay} / trip` : 'GH₵ 5,500 / trip'}
+                    </span>
                   </div>
                   <div className="text-right">
                     <span className="text-lg font-black text-[#EB4D23] font-mono tabular-nums">
@@ -196,7 +198,7 @@ export const MaterialCalculatorModal: React.FC<MaterialCalculatorModalProps> = (
                       Washed Riversand
                     </span>
                     <span className="text-[11px] text-gray-500 font-mono">
-                      Contact for Rate
+                      Contact for Price
                     </span>
                   </div>
                   <div className="text-right">
@@ -213,7 +215,7 @@ export const MaterialCalculatorModal: React.FC<MaterialCalculatorModalProps> = (
                     <span className="text-xs font-bold text-gray-900 block">
                       Filling Material / Laterite
                     </span>
-                    <span className="text-[11px] text-gray-500 font-mono">Contact for Rate</span>
+                    <span className="text-[11px] text-gray-500 font-mono">Contact for Price</span>
                   </div>
                   <div className="text-right">
                     <span className="text-lg font-black text-[#EB4D23] font-mono tabular-nums">
@@ -224,8 +226,15 @@ export const MaterialCalculatorModal: React.FC<MaterialCalculatorModalProps> = (
               )}
             </div>
 
-            <div className="pt-2 border-t border-[#EB4D23]/20 flex items-center justify-between">
-              <span className="text-xs text-gray-600 font-semibold">Total Estimated Supply:</span>
+            <div className="pt-2 border-t border-[#EB4D23]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <span className="text-xs text-gray-600 font-semibold block">
+                  Estimated Total (Priced Materials Only):
+                </span>
+                <span className="text-[11px] text-gray-500">
+                  * Riversand &amp; Laterite prices confirmed on dispatch request.
+                </span>
+              </div>
               <span className="text-xl font-extrabold text-gray-900 font-mono tabular-nums">
                 GH₵ {totalEstimatedCost.toLocaleString()}
               </span>

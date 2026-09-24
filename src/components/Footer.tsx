@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
-import { ChevronRight, Phone, Mail, MapPin, ArrowUp, X, Shield, FileText } from 'lucide-react';
-import { COMPANY_DETAILS, LOGO } from '../data/materialsData';
+import { ChevronRight, Phone, Mail, MapPin, ArrowUp, X, Shield, FileText, Globe } from 'lucide-react';
+import { COMPANY_DETAILS, LOGO, PRICE_ITEMS, parsePrice } from '../data/materialsData';
 
 interface FooterProps {
   onSelectCategory: (category: string) => void;
+  onNavigateHome?: () => void;
+  onNavigateAbout?: () => void;
+  onNavigateMaterials?: () => void;
+  onNavigateServices?: () => void;
+  onNavigatePrices?: () => void;
+  onNavigateGallery?: () => void;
+  onNavigateContact?: () => void;
   onNavigateTerms?: () => void;
   onNavigatePrivacy?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onSelectCategory,
+  onNavigateHome,
+  onNavigateAbout,
+  onNavigateMaterials,
+  onNavigateServices,
+  onNavigatePrices,
+  onNavigateGallery,
+  onNavigateContact,
   onNavigateTerms,
   onNavigatePrivacy,
 }) => {
@@ -27,12 +41,21 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center">
-              <img
-                src={LOGO}
-                alt={COMPANY_DETAILS.name}
-                className="h-12 sm:h-14 w-auto object-contain"
-                referrerPolicy="no-referrer"
-              />
+              <button
+                onClick={() => {
+                  if (onNavigateHome) onNavigateHome();
+                  else window.location.hash = '#home';
+                }}
+                className="cursor-pointer text-left"
+                aria-label={COMPANY_DETAILS.name}
+              >
+                <img
+                  src={LOGO}
+                  alt={COMPANY_DETAILS.name}
+                  className="h-12 sm:h-14 w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </button>
             </div>
             <p className="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-sm">
               {COMPANY_DETAILS.name} is a leading supplier of quality building materials for
@@ -85,49 +108,70 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
               <li>
-                <a className="hover:text-[#EB4D23] transition flex items-center gap-1.5" href="#">
+                <button
+                  onClick={() => {
+                    if (onNavigateHome) onNavigateHome();
+                    else window.location.hash = '#home';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
+                >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Home
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5"
-                  href="#about"
+                <button
+                  onClick={() => {
+                    if (onNavigateAbout) onNavigateAbout();
+                    else window.location.hash = '#about';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
                 >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> About Us
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5"
-                  href="#materials"
+                <button
+                  onClick={() => {
+                    if (onNavigateMaterials) onNavigateMaterials();
+                    else window.location.hash = '#materials';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
                 >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Materials
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5"
-                  href="#services"
+                <button
+                  onClick={() => {
+                    if (onNavigateServices) onNavigateServices();
+                    else window.location.hash = '#services';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
                 >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Services
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5"
-                  href="#gallery"
+                <button
+                  onClick={() => {
+                    if (onNavigateGallery) onNavigateGallery();
+                    else window.location.hash = '#gallery';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
                 >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Gallery
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5"
-                  href="#contact"
+                <button
+                  onClick={() => {
+                    if (onNavigateContact) onNavigateContact();
+                    else window.location.hash = '#contact';
+                  }}
+                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 cursor-pointer text-left w-full"
                 >
                   <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Contact
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -137,56 +181,67 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display">
               Our Materials
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('boulders')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Boulders (GH₵ 6,000)
-                </button>
-              </li>
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('filling')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Filling Material / Laterite
-                </button>
-              </li>
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('quarry-dust')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Quarry Dust (GH₵ 7,300)
-                </button>
-              </li>
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('quarry-stones')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Quarry Stones / Chippings (GH₵ 5,500)
-                </button>
-              </li>
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('riversand')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Riversand
-                </button>
-              </li>
-              <li>
-                <button
-                  className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
-                  onClick={() => onSelectCategory('stones')}
-                >
-                  <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> Stones (GH₵ 5,000)
-                </button>
-              </li>
-            </ul>
+            {(() => {
+              const getFooterLabel = (category: string) => {
+                const item = PRICE_ITEMS.find((p) => p.category === category || p.id === category);
+                if (!item) return '';
+                const num = parsePrice(item.priceDisplay);
+                return num !== null ? `${item.name} (${item.priceDisplay})` : item.name;
+              };
+
+              return (
+                <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('boulders')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('boulders')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('filling')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('filling')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('quarry-dust')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('quarry-dust')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('quarry-stones')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('quarry-stones')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('riversand')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('riversand')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="hover:text-[#EB4D23] transition flex items-center gap-1.5 text-left cursor-pointer"
+                      onClick={() => onSelectCategory('stones')}
+                    >
+                      <ChevronRight className="w-3 h-3 text-[#EB4D23]" /> {getFooterLabel('stones')}
+                    </button>
+                  </li>
+                </ul>
+              );
+            })()}
           </div>
 
           {/* Col 4: Contact Info */}
@@ -227,6 +282,21 @@ export const Footer: React.FC<FooterProps> = ({
                     href={`mailto:${COMPANY_DETAILS.email}`}
                   >
                     {COMPANY_DETAILS.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2.5">
+                <Globe className="w-4 h-4 text-[#EB4D23] mt-0.5 flex-shrink-0" />
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-gray-500 block">Website</span>
+                  <a
+                    className="text-white hover:text-[#EB4D23] transition font-medium"
+                    href={COMPANY_DETAILS.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {COMPANY_DETAILS.website}
                   </a>
                 </div>
               </div>

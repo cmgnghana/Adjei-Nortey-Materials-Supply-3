@@ -18,7 +18,7 @@ export const MaterialDetailModal: React.FC<MaterialDetailModalProps> = ({
 
   const matchedCat = MATERIAL_CATEGORIES.find((c) => c.id === category) || MATERIAL_CATEGORIES[0];
 
-  const matchedItem = PRICE_ITEMS.find((p) => p.id === matchedCat.id) || PRICE_ITEMS[0];
+  const matchedItem = PRICE_ITEMS.find((p) => p.category === matchedCat.id || p.id === matchedCat.id) || PRICE_ITEMS[0];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">

@@ -25,28 +25,27 @@ import { PriceItem } from '../types';
 
 interface AboutPageScreenProps {
   onNavigateHome: () => void;
+  onNavigateAbout?: () => void;
   onNavigateMaterials: () => void;
+  onNavigateServices?: () => void;
   onNavigatePrices: () => void;
   onNavigateGallery: () => void;
   onNavigateContact: () => void;
-  onOpenCalculator: () => void;
+  onOpenCalculator?: () => void;
   onSelectMaterial: (item: PriceItem) => void;
 }
 
 export const AboutPageScreen: React.FC<AboutPageScreenProps> = ({
   onNavigateHome,
+  onNavigateAbout,
   onNavigateMaterials,
+  onNavigateServices,
   onNavigatePrices,
   onNavigateGallery,
   onNavigateContact,
   onOpenCalculator,
   onSelectMaterial,
 }) => {
-  const quarryItem = PRICE_ITEMS.find((p) => p.id === 'quarry-3-4') || PRICE_ITEMS[0];
-  const riversandItem = PRICE_ITEMS.find((p) => p.id === 'riversand-clean') || PRICE_ITEMS[4];
-  const fillingItem = PRICE_ITEMS.find((p) => p.id === 'filling-grade-1') || PRICE_ITEMS[5];
-  const sandItem = PRICE_ITEMS.find((p) => p.id === 'sand-smooth') || PRICE_ITEMS[7];
-
   return (
     <div className="bg-[#F9FAFB] min-h-screen text-[#080e21] flex flex-col font-sans">
       {/* 3. HERO BANNER (Dark construction aesthetic with industrial scrim overlay) */}
@@ -183,67 +182,118 @@ export const AboutPageScreen: React.FC<AboutPageScreenProps> = ({
                 </div>
               </article>
 
-              {/* b) Materials Supplied Card */}
+              {/* b) Company Values, Fleet & Experience Statistics Card */}
               <article className="bg-white rounded-2xl border border-gray-200/80 p-6 md:p-10 shadow-[0_1px_3px_rgba(8,14,33,0.05),0_4px_12px_rgba(8,14,33,0.04)]">
-                <div className="mb-8">
+                <div className="mb-6">
                   <span className="text-xs font-mono text-[#EB4D23] uppercase font-bold tracking-wider block mb-1">
-                    Catalog Matrix
+                    Company Statistics &amp; Standards
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-bold font-display text-[#080e21] tracking-tight">
-                    Materials Supplied By {COMPANY_DETAILS.name}
+                    Experience, Fleet Capacity &amp; Values
                   </h2>
                   <p className="text-sm text-gray-500 mt-1">
-                    Certified aggregates and graded sands delivered directly to your job site
+                    Established in {COMPANY_DETAILS.establishedYear}, {COMPANY_DETAILS.name} brings over {COMPANY_DETAILS.yearsExperience} years of proven logistics reliability to contractors and developers across {COMPANY_DETAILS.location}.
                   </p>
                 </div>
 
-                {/* Grid of Materials */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {PRICE_ITEMS.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => onSelectMaterial(item)}
-                      className="border border-gray-200/90 rounded-xl p-5 hover:border-[#EB4D23] transition-all bg-white hover:shadow-md group cursor-pointer flex flex-col justify-between"
-                    >
+                {/* 4 Stat Highlights Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200/70 text-center">
+                    <Truck className="w-6 h-6 mx-auto text-[#EB4D23] mb-1.5" />
+                    <span className="text-xl sm:text-2xl font-black text-[#080e21] block font-mono">
+                      {COMPANY_DETAILS.truckFleetCount}
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-medium">Tipper Fleet</span>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200/70 text-center">
+                    <Award className="w-6 h-6 mx-auto text-[#EB4D23] mb-1.5" />
+                    <span className="text-xl sm:text-2xl font-black text-[#080e21] block font-mono">
+                      {COMPANY_DETAILS.yearsExperience}+ Yrs
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-medium">Experience</span>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200/70 text-center">
+                    <Building className="w-6 h-6 mx-auto text-[#EB4D23] mb-1.5" />
+                    <span className="text-xl sm:text-2xl font-black text-[#080e21] block font-mono">
+                      {COMPANY_DETAILS.happyClientsCount}
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-medium">Site Clients</span>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200/70 text-center">
+                    <ShieldCheck className="w-6 h-6 mx-auto text-[#EB4D23] mb-1.5" />
+                    <span className="text-xl sm:text-2xl font-black text-[#080e21] block font-mono">
+                      100%
+                    </span>
+                    <span className="text-[11px] text-gray-500 font-medium">Quality Graded</span>
+                  </div>
+                </div>
+
+                {/* Company Core Values */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="text-base font-bold text-[#080e21] font-display">
+                    Our Core Operating Principles
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="p-3.5 rounded-xl border border-gray-200/70 bg-gray-50/70 flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-[#EB4D23] mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="w-full h-36 rounded-lg overflow-hidden mb-3 bg-gray-100">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            referrerPolicy="no-referrer"
-                          />
-                        </div>
-                        <h3 className="text-base font-bold text-[#080e21] group-hover:text-[#EB4D23] transition-colors">
-                          {item.name}
-                        </h3>
-                        <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                          {item.description}
-                        </p>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        <span>Unit: Single Trip</span>
-                        <span className="font-mono text-[#EB4D23] font-bold">
-                          {item.priceDisplay}
-                        </span>
+                        <span className="text-xs font-bold text-[#080e21] block">Volume &amp; Net Weight Integrity</span>
+                        <span className="text-[11px] text-gray-600">Strict single-trip full tipper loads with zero volume deductions.</span>
                       </div>
                     </div>
-                  ))}
+
+                    <div className="p-3.5 rounded-xl border border-gray-200/70 bg-gray-50/70 flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-[#EB4D23] mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="text-xs font-bold text-[#080e21] block">Certified Aggregates</span>
+                        <span className="text-[11px] text-gray-600">Clean, silt-free river sand and precision-crushed granite aggregates.</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl border border-gray-200/70 bg-gray-50/70 flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-[#EB4D23] mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="text-xs font-bold text-[#080e21] block">Rapid Site Dispatch</span>
+                        <span className="text-[11px] text-gray-600">Direct loading and punctual tipper haulage to your job site location.</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl border border-gray-200/70 bg-gray-50/70 flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-[#EB4D23] mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="text-xs font-bold text-[#080e21] block">Transparent Invoicing</span>
+                        <span className="text-[11px] text-gray-600">Clear rate cards and upfront delivery quotations with no hidden fees.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Delivery Coverage */}
+                <div className="bg-[#080e21]/5 p-4 rounded-xl border border-gray-200/80 mb-6">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#080e21] mb-1 font-mono">
+                    Delivery Coverage Areas
+                  </h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Active haulage routes across Mallam Junction, Accra Central, Tema Industrial Area, Kasoa, Amasaman, Pokuase, and nationwide construction projects in Ghana.
+                  </p>
                 </div>
 
                 {/* Bottom Action Buttons */}
-                <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap items-center gap-4">
+                <div className="pt-6 border-t border-gray-100 flex flex-wrap items-center gap-4">
                   <button
                     onClick={onNavigateMaterials}
-                    className="bg-[#000000] hover:bg-[#080e21] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-sm transition-all inline-flex items-center gap-2 cursor-pointer"
+                    className="bg-[#080e21] hover:bg-black text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-sm transition-all inline-flex items-center gap-2 cursor-pointer"
                   >
-                    <span>Explore Materials -&gt;</span>
+                    <span>Explore Materials Catalog -&gt;</span>
                   </button>
                   <button
                     onClick={onNavigatePrices}
-                    className="bg-white border border-gray-300 hover:border-gray-500 text-[#080e21] font-bold text-xs sm:text-sm px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2 cursor-pointer"
+                    className="bg-[#EB4D23] hover:bg-[#d63f17] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-sm transition-all inline-flex items-center gap-2 cursor-pointer"
                   >
-                    <span>Check Prices -&gt;</span>
+                    <span>Check Rate Card -&gt;</span>
                   </button>
                 </div>
               </article>

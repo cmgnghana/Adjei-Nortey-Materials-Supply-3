@@ -16,12 +16,14 @@ interface PricingSectionProps {
   onOpenPriceListModal: () => void;
   onOpenCalculatorModal: () => void;
   onSelectMaterialForQuote: (item: PriceItem) => void;
+  onNavigatePrices?: () => void;
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({
   onOpenPriceListModal,
   onOpenCalculatorModal,
   onSelectMaterialForQuote,
+  onNavigatePrices,
 }) => {
   const [activeUnit, setActiveUnit] = useState<SupplyUnit>('trip');
 
@@ -39,7 +41,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-white" id="pricing">
+    <section className="py-20 lg:py-28 bg-white" id="home-pricing">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-8">
@@ -189,13 +191,22 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
           ))}
         </div>
 
-        {/* Action Button: Open full price list modal */}
-        <div className="text-center pt-4">
+        {/* Action Button: Open full price list modal or visit dedicated page */}
+        <div className="text-center pt-4 flex flex-wrap items-center justify-center gap-3">
+          {onNavigatePrices && (
+            <button
+              onClick={onNavigatePrices}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#080e21] hover:bg-black text-white text-xs font-bold transition cursor-pointer shadow-sm"
+            >
+              <span>Visit Dedicated Prices Page</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
           <button
             onClick={onOpenPriceListModal}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold transition cursor-pointer"
           >
-            <span>Open Complete Rate Card Modal</span>
+            <span>Open Quick Rate Card Modal</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
         </div>

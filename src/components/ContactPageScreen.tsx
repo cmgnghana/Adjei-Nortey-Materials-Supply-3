@@ -23,6 +23,7 @@ interface ContactPageScreenProps {
   onNavigateServices: () => void;
   onNavigatePrices: () => void;
   onNavigateGallery: () => void;
+  onNavigateContact?: () => void;
   onQuoteSubmit?: (quote: QuoteRequest) => void;
 }
 
@@ -33,6 +34,7 @@ export const ContactPageScreen: React.FC<ContactPageScreenProps> = ({
   onNavigateServices,
   onNavigatePrices,
   onNavigateGallery,
+  onNavigateContact,
   onQuoteSubmit,
 }) => {
   const [fullName, setFullName] = useState('');
@@ -212,11 +214,12 @@ export const ContactPageScreen: React.FC<ContactPageScreenProps> = ({
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:bg-white focus:border-[#EB4D23] focus:ring-2 focus:ring-[#EB4D23]/20 transition-all text-sm appearance-none outline-none cursor-pointer"
                     >
                       <option value="General Materials Supply Enquiry">General Materials Supply Enquiry</option>
-                      <option value="Quarry Stones">Quarry Stones (3/4", 1", 3/8", 5/8")</option>
-                      <option value="Riversand">Riversand (Clean Dredged Sand)</option>
-                      <option value="Filling Sand">Filling Sand (Grade 1 &amp; Laterite)</option>
-                      <option value="Smooth Sand">Smooth Sand (Fine Plastering Sand)</option>
-                      <option value="Rough Sand">Rough Sand (Coarse Rendering Sand)</option>
+                      <option value="Boulders">Boulders (Sea defense &amp; heavy foundation)</option>
+                      <option value="Filling Material / Laterite">Filling Material / Laterite (Compaction &amp; leveling)</option>
+                      <option value="Quarry Dust">Quarry Dust (Block production &amp; paving)</option>
+                      <option value="Quarry Stones / Chippings">Quarry Stones / Chippings (Aggregates, slabs, beams)</option>
+                      <option value="Riversand">Riversand (Clean dredged structural sand)</option>
+                      <option value="Stones">Stones (Building &amp; foundation ballast stones)</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
                       <ChevronDown className="w-4 h-4" />
@@ -362,9 +365,14 @@ export const ContactPageScreen: React.FC<ContactPageScreenProps> = ({
                     <p className="text-[11px] font-bold tracking-wider text-slate-500 uppercase font-mono">
                       Website
                     </p>
-                    <span className="text-base font-extrabold text-slate-900">
-                      www.adjeinorteymaterials.com
-                    </span>
+                    <a
+                      href={COMPANY_DETAILS.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base font-extrabold text-slate-900 hover:text-[#EB4D23] transition-colors"
+                    >
+                      {COMPANY_DETAILS.website}
+                    </a>
                   </div>
                 </div>
 

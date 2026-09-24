@@ -36,7 +36,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenQuoteModal
   };
 
   return (
-    <section className="py-16 sm:py-20 bg-gray-50 border-t border-gray-200/60" id="contact">
+    <section className="py-16 sm:py-20 bg-gray-50 border-t border-gray-200/60" id="home-contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           {/* Left: Minor Color Card "Start Your Modern Construction Today" */}

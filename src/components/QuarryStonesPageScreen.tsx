@@ -80,7 +80,7 @@ export const QuarryStonesPageScreen: React.FC<QuarryStonesPageScreenProps> = ({
   const generateWhatsAppLink = () => {
     const text = encodeURIComponent(
       `Hello ${COMPANY_DETAILS.name},\n` +
-      `I would like to order Quarry Stones / Chippings (GH₵ 5,500 / Single Trip).\n` +
+      `I would like to order Quarry Stones / Chippings (${quarryItem.priceDisplay} / Single Trip).\n` +
       `Name: ${fullName || 'Site Contractor'}\n` +
       `Phone: ${phone || 'Available on call'}\n` +
       `Location: Mallam Junction / Accra\n` +
@@ -131,7 +131,7 @@ export const QuarryStonesPageScreen: React.FC<QuarryStonesPageScreenProps> = ({
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute top-4 right-4 bg-[#EB4D23] text-white px-4 py-1.5 rounded-full text-sm font-black font-mono shadow-md">
-                  GH₵ 5,500 / Trip
+                  {quarryItem.priceDisplay} / Trip
                 </div>
               </div>
 
@@ -170,7 +170,7 @@ export const QuarryStonesPageScreen: React.FC<QuarryStonesPageScreenProps> = ({
                 </div>
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
                   <span className="text-xs text-gray-400 block font-bold uppercase mb-1">Price</span>
-                  <span className="font-extrabold text-[#EB4D23] font-mono">GH₵ 5,500 / Trip</span>
+                  <span className="font-extrabold text-[#EB4D23] font-mono">{quarryItem.priceDisplay} / Trip</span>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
                   <span className="text-xs text-gray-400 block font-bold uppercase mb-1">Applications</span>

@@ -9,7 +9,7 @@ import {
   Mail,
   Clock,
 } from 'lucide-react';
-import { COMPANY_DETAILS, LOGO } from '../data/materialsData';
+import { COMPANY_DETAILS, LOGO, PRICE_ITEMS } from '../data/materialsData';
 
 interface HeaderProps {
   currentView: 'home' | 'about' | 'materials' | 'quarry-stones' | 'services' | 'prices' | 'contact' | 'terms' | 'privacy';
@@ -121,70 +121,78 @@ export const Header: React.FC<HeaderProps> = ({
                 } ${materialsDropdownOpen ? 'rotate-180 text-[#EB4D23]' : ''}`}
               />
             </button>
-            {materialsDropdownOpen && (
-              <div className="absolute left-0 mt-1 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-2.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                <button
-                  onClick={() => {
-                    onSelectMaterial('boulders');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Boulders</span>
-                  <span className="text-[11px] text-gray-400">GH₵ 6,000 / Trip</span>
-                </button>
-                <button
-                  onClick={() => {
-                    onSelectMaterial('filling-material');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Filling Material / Laterite</span>
-                  <span className="text-[11px] text-gray-400">Contact for Price</span>
-                </button>
-                <button
-                  onClick={() => {
-                    onSelectMaterial('quarry-dust');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Quarry Dust</span>
-                  <span className="text-[11px] text-gray-400">GH₵ 7,300 / Trip</span>
-                </button>
-                <button
-                  onClick={() => {
-                    onSelectMaterial('quarry-stones');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Quarry Stones / Chippings</span>
-                  <span className="text-[11px] text-gray-400">GH₵ 5,500 / Trip</span>
-                </button>
-                <button
-                  onClick={() => {
-                    onSelectMaterial('riversand');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Riversand</span>
-                  <span className="text-[11px] text-gray-400">Contact for Price</span>
-                </button>
-                <button
-                  onClick={() => {
-                    onSelectMaterial('stones');
-                    setMaterialsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
-                >
-                  <span className="font-semibold block text-gray-900">Stones</span>
-                  <span className="text-[11px] text-gray-400">GH₵ 5,000 / Trip</span>
-                </button>
-              </div>
-            )}
+            {materialsDropdownOpen && (() => {
+              const getPriceLabel = (category: string) => {
+                const item = PRICE_ITEMS.find((p) => p.category === category || p.id === category);
+                if (!item) return 'Contact for Price';
+                return item.priceDisplay.startsWith('GH₵') ? `${item.priceDisplay} / Trip` : item.priceDisplay;
+              };
+
+              return (
+                <div className="absolute left-0 mt-1 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-2.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('boulders');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Boulders</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('boulders')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('filling-material');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Filling Material / Laterite</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('filling')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('quarry-dust');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Quarry Dust</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('quarry-dust')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('quarry-stones');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Quarry Stones / Chippings</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('quarry-stones')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('riversand');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Riversand</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('riversand')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onSelectMaterial('stones');
+                      setMaterialsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-[#FFF2EE] hover:text-[#EB4D23] font-medium transition-colors cursor-pointer"
+                  >
+                    <span className="font-semibold block text-gray-900">Stones</span>
+                    <span className="text-[11px] text-gray-400">{getPriceLabel('stones')}</span>
+                  </button>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Services Active / Dropdown Item */}

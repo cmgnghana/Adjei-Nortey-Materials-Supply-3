@@ -15,14 +15,16 @@ import { PriceItem, MaterialCategoryId } from '../types';
 interface MaterialsSectionProps {
   onSelectCategory: (categoryId: MaterialCategoryId) => void;
   onOpenDetailModal?: (type: MaterialCategoryId) => void;
+  onNavigatePrices?: () => void;
 }
 
 export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
   onSelectCategory,
   onOpenDetailModal,
+  onNavigatePrices,
 }) => {
   return (
-    <section className="py-20 lg:py-24 bg-gray-50/70 border-t border-gray-200/60" id="materials">
+    <section className="py-20 lg:py-24 bg-gray-50/70 border-t border-gray-200/60" id="home-materials">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -42,13 +44,19 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
               {COMPANY_DETAILS.name} supplies quality building materials suited for
               residential, commercial, and infrastructure construction projects.
             </p>
-            <a
-              className="inline-flex items-center gap-2 bg-[#080e21] hover:bg-black text-white text-xs font-bold px-5 py-3 rounded-full transition shadow-sm"
-              href="#pricing"
+            <button
+              onClick={() => {
+                if (onNavigatePrices) {
+                  onNavigatePrices();
+                } else {
+                  window.location.hash = '#prices';
+                }
+              }}
+              className="inline-flex items-center gap-2 bg-[#080e21] hover:bg-black text-white text-xs font-bold px-5 py-3 rounded-full transition shadow-sm cursor-pointer"
             >
               <span>View Prices</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            </button>
           </div>
         </div>
 

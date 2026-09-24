@@ -16,6 +16,7 @@ import { PriceItem, MaterialCategoryId } from '../types';
 interface MaterialsPageScreenProps {
   onNavigateHome: () => void;
   onNavigateAbout: () => void;
+  onNavigateMaterials?: () => void;
   onNavigateServices: () => void;
   onNavigatePrices: () => void;
   onNavigateGallery: () => void;
@@ -28,6 +29,7 @@ interface MaterialsPageScreenProps {
 export const MaterialsPageScreen: React.FC<MaterialsPageScreenProps> = ({
   onNavigateHome,
   onNavigateAbout,
+  onNavigateMaterials,
   onNavigateServices,
   onNavigatePrices,
   onNavigateGallery,
@@ -250,7 +252,7 @@ export const MaterialsPageScreen: React.FC<MaterialsPageScreenProps> = ({
                     </a>
                     <button
                       onClick={() => {
-                        const priceItem = PRICE_ITEMS.find((p) => p.id === cat.id) || PRICE_ITEMS[0];
+                        const priceItem = PRICE_ITEMS.find((p) => p.category === cat.id || p.id === cat.id) || PRICE_ITEMS[0];
                         onSelectMaterial(priceItem);
                       }}
                       className="inline-flex items-center gap-1.5 bg-[#EB4D23] hover:bg-[#d63f17] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer active:scale-95"

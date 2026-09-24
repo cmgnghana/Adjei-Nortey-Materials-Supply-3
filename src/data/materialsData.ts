@@ -9,15 +9,26 @@ export const COMPANY_DETAILS = {
   phone: '0244520024',
   phoneIntl: '+233244520024',
   email: 'adjeinortey999@gmail.com',
+  website: 'www.somconstructiongha.com',
+  websiteUrl: 'https://www.somconstructiongha.com',
   location: 'Mallam Junction, Accra, Ghana',
   address: 'Mallam Junction, Accra, Ghana',
   city: 'Accra, Ghana',
+  workingHours: 'Monday – Saturday: 7:00 AM – 6:00 PM (24/7 Available)',
   establishedYear: '2012',
   yearsExperience: '14',
   truckFleetCount: '45+',
   happyClientsCount: '1,200+',
   satisfiedPartners: '500+',
   currency: 'GH₵',
+};
+
+// Helper function to safely parse numeric price amounts from priceDisplay string
+export const parsePrice = (priceDisplay: string): number | null => {
+  const cleaned = priceDisplay.replace(/[^0-9]/g, '');
+  if (!cleaned) return null;
+  const num = parseInt(cleaned, 10);
+  return isNaN(num) ? null : num;
 };
 
 // Website Logo - Provided directly by client

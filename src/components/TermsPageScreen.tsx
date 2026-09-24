@@ -134,7 +134,14 @@ export const TermsPageScreen: React.FC<TermsPageScreenProps> = ({
                 <p className="text-gray-600 flex items-center gap-2">
                   <Globe className="w-4 h-4 text-gray-400" />
                   <span className="font-medium text-gray-700">Website:</span>
-                  <span className="text-gray-900 font-medium">adjeinorteymaterials.com</span>
+                  <a
+                    className="text-gray-900 font-medium hover:text-[#EB4D23] transition-colors"
+                    href={COMPANY_DETAILS.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {COMPANY_DETAILS.website}
+                  </a>
                 </p>
                 <p className="text-gray-600 flex items-center gap-2">
                   <Mail className="w-4 h-4 text-gray-400" />

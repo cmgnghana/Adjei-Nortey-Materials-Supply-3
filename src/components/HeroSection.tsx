@@ -16,9 +16,10 @@ import { QuoteRequest } from '../types';
 
 interface HeroSectionProps {
   onQuoteSubmit: (quote: QuoteRequest) => void;
+  onNavigateContact?: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onQuoteSubmit }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onQuoteSubmit, onNavigateContact }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -85,13 +86,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onQuoteSubmit }) => {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center gap-2 bg-[#EB4D23] hover:bg-[#D03B13] text-white font-bold px-7 py-3.5 rounded-full shadow-lg shadow-[#EB4D23]/30 transition-all hover:scale-[1.02]"
+              <button
+                onClick={() => {
+                  if (onNavigateContact) {
+                    onNavigateContact();
+                  } else {
+                    window.location.hash = '#contact';
+                  }
+                }}
+                className="inline-flex items-center justify-center gap-2 bg-[#EB4D23] hover:bg-[#D03B13] text-white font-bold px-7 py-3.5 rounded-full shadow-lg shadow-[#EB4D23]/30 transition-all hover:scale-[1.02] cursor-pointer"
               >
                 <span>Contact Now</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </button>
 
               <a
                 href={`tel:${COMPANY_DETAILS.phone}`}

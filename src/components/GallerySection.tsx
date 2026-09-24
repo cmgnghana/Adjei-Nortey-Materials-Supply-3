@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { Camera, Eye, X, Filter, Truck, ShieldCheck, Building2, Layers } from 'lucide-react';
+import { Camera, Eye, X, Filter, Truck, ShieldCheck, Building2, Layers, ArrowRight } from 'lucide-react';
 import { GALLERY_ITEMS, SERVICES, COMPANY_DETAILS } from '../data/materialsData';
 import { GalleryItem } from '../types';
 
-export const GallerySection: React.FC = () => {
+interface GallerySectionProps {
+  onNavigateServices?: () => void;
+}
+
+export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigateServices }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
@@ -15,20 +19,32 @@ export const GallerySection: React.FC = () => {
 
   return (
     <>
-      {/* Services Section */}
-      <section className="py-20 bg-white border-t border-gray-200/60" id="services">
+      {/* Services Section Teaser */}
+      <section className="py-20 bg-white border-t border-gray-200/60" id="home-services">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 text-[#EB4D23] font-bold text-xs uppercase tracking-widest mb-2">
-              <Truck className="w-4 h-4" />
-              <span>Supply &amp; Logistics</span>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 text-[#EB4D23] font-bold text-xs uppercase tracking-widest mb-2">
+                <Truck className="w-4 h-4" />
+                <span>Supply &amp; Logistics</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-gray-900 leading-tight">
+                Building Material Supply Services
+              </h2>
+              <p className="text-sm text-gray-500 mt-2">
+                Direct site material supply solutions managed with punctual dispatch and fleet coordination across {COMPANY_DETAILS.location}.
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-gray-900 mb-3">
-              Building Material Supply Services
-            </h2>
-            <p className="text-sm text-gray-500">
-              Direct site material supply solutions managed with punctual dispatch and fleet coordination across {COMPANY_DETAILS.location}.
-            </p>
+
+            {onNavigateServices && (
+              <button
+                onClick={onNavigateServices}
+                className="inline-flex items-center gap-2 bg-[#080e21] hover:bg-black text-white text-xs font-bold px-5 py-3 rounded-full transition shadow-sm cursor-pointer whitespace-nowrap self-start md:self-auto"
+              >
+                <span>Explore All Services</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
